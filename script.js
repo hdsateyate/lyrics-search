@@ -15,20 +15,47 @@ async function searchSongs(term) {
 
 // Show song and artist in DOM
 function showDataInDOM(data) {   
-   let output = '';
+   // map version below is a little less verbose
+   // let output = '';
 
-   data.data.forEach(song => {
-      output += `
-         <li>
-            <span><strong>${song.artist.name}</strong> - ${song.title}</span>
-            <button class="btn" data-artist="${song.artist.name}" data-songtitle="${song.title}">Get Lyrics</button>
-         </li>`;
-   });
+   // data.data.forEach(song => {
+   //    output += `
+   //       <li>
+   //          <span><strong>${song.artist.name}</strong> - ${song.title}</span>
+   //          <button class="btn" data-artist="${song.artist.name}" data-songtitle="${song.title}">Get Lyrics</button>
+   //       </li>`;
+   // });
+
+   // result.innerHTML = `
+   //    <ul class="songs">
+   //       ${output};
+   //    </ul>`;
 
    result.innerHTML = `
       <ul class="songs">
-         ${output};
+         ${data.data.map(song => `
+            <li>
+               <span><strong>${song.artist.name}</strong> - ${song.title}</span>
+               <button class="btn" data-artist="${song.artist.name}" data-songtitle="${song.title}">Get Lyrics</button>
+            </li>`)
+         .join('')}
       </ul>`;
+
+   if (data.prev || data.next) {
+      more.innerHTML = `
+         ${data.prev ? `<button class="btn" onclick="getMoreSongs('${data.prev}')">Prev</button>` : ''}
+         ${data.next ? `<button class="btn" onclick="getMoreSongs('${data.next}')">Next</button>` : ''}`;
+   } else {
+      more.innerHTML = '';
+   }
+}
+
+// Get prev/next results
+async function getMoreSongs(url) {
+   const res = await fetch(`https://crossorigin.me/${url}`);
+   const data = await res.json();
+
+   showDataInDOM(data);
 }
 
 
