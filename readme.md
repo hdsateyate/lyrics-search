@@ -1,0 +1,1 @@
+Project 15 from Brad Traversy’s “20 Web Projects With Vanilla JavaScript” Udemy Course.
